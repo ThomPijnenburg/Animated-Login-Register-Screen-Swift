@@ -38,11 +38,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // set textfields' delegates to this viewcontroller
         nameField.delegate = self
         nameField.tag = 0
         
         emailField.delegate = self
         emailField.tag = 1
+        
         passwordField.delegate = self
         passwordField.tag = 2
         
@@ -56,6 +58,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view, typically from a nib.
     }
     
+    // set alpa of al subviews to 0 before view appears
     override func viewWillAppear(_ animated: Bool) {
         loginTitle.alpha = 0.0
         nameField.alpha = 0.0
@@ -70,10 +73,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         backgroundImage.alpha = 1.0
         
+        // hide namefields
         nameLabel.center.x -= view.bounds.width
         nameField.center.x -= view.bounds.width
         nameField.isUserInteractionEnabled = false
-
+        
+        // shift other fiels slightly up
         loginButton.center.y -= bottomRowOffset + shiftFields
         registerButton.center.y -= bottomRowOffset + shiftFields
         
@@ -84,16 +89,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
         emailLabel.center.y -= topRowOffset + shiftFields
         loginTitle.center.y -= topRowOffset + 20
         
+        // set button action
         registerButton.addTarget(self, action: #selector(self.didTapRegisterButton), for: .touchUpInside)
+        
+        // set submit button action
+        loginButton.addTarget(self, action: #selector(self.didTapSubmitButton), for: .touchUpInside)
 
     }
     
+    // animate subview after appearance of view
+    // translate elements with different distances to get staggered effect
     override func viewDidAppear(_ animated: Bool) {
         
+        // fade out background image
         UIView.animate(withDuration: 1.0, animations: {
             self.backgroundImage.alpha = 0.4
         }, completion: nil)
         
+        // fade and translate lowest elements
         UIView.animate(withDuration: 2.0, delay: 1.0,
                        options: [],
                        animations: {
@@ -103,6 +116,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                         self.registerButton.center.y += self.bottomRowOffset
         }, completion: nil)
         
+        // fade and translate middle elements
         UIView.animate(withDuration: 2.0, delay: 1.0,
                        options: [],
                        animations: {
@@ -112,6 +126,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                         self.passwordLabel.center.y += self.midRowOffset
         }, completion: nil)
         
+        // fade and translate lowest elements
         UIView.animate(withDuration: 2.0, delay: 1.0,
                        options: [],
                        animations: {
@@ -126,15 +141,20 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    // change view when they tap or register
     func didTapRegisterButton(_ sender: UIButton!) {
+        // shift fields down
         shiftFields(loginStatus)
-        changeLabels(loginStatus)
-        // change button actions
         
+        // change labels
+        changeLabels(loginStatus)
+        
+        // toggle login status
         nameField.isUserInteractionEnabled = loginStatus
         loginStatus = !loginStatus
     }
     
+    // perform login or register
     func didTapSubmitButton(_ sender: UIButton!) {
         if loginStatus {
             // log in the user
